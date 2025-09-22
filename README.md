@@ -12,7 +12,7 @@ EV-Stacks provides Docker-based deployment stacks for Evolve chains, enabling ea
 
 **Quick Start:**
 ```bash
-bash -c "bash -i <(curl -s https://raw.githubusercontent.com/evstack/ev-toolbox/refs/heads/main/ev-stacks/deploy-evolve.sh)"
+bash -c "bash -i <(curl -s https://raw.githubusercontent.com/noble-assets/ev-toolbox/refs/heads/main/ev-stacks/deploy-evolve.sh)"
 ```
 
 See [EV-Stacks README](ev-stacks/README.md) for detailed documentation.

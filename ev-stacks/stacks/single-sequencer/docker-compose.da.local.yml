@@ -25,12 +25,14 @@ services:
         condition: service_completed_successfully
     env_file: .env
     ports:
-      - $SEQUENCER_EV_RETH_PROMETHEUS_PORT:9001
+      - 9001:9001
+      - 30303:30303
     restart: always
     volumes:
       - ./genesis.json:/root/genesis.json:ro
       - jwttoken-sequencer:/root/jwt:ro
       - ev-reth-sequencer-data:/root/reth
+      - ev-reth-sequencer-logs:/root/logs
     entrypoint: /bin/sh -c
     command:
       - |
@@ -61,10 +63,12 @@ services:
 
   single-sequencer:
     container_name: single-sequencer
-    image: ghcr.io/evstack/ev-node-evm-single:main
+    image: ghcr.io/evstack/ev-node-evm-single:v1.0.0-beta.3
     env_file: .env
     ports:
-      - $SEQUENCER_EV_NODE_PROMETHEUS_PORT:26660
+      - 7331:7331
+      - 7676:7676
+      - 26660:26660
     restart: always
     depends_on:
       ev-reth-sequencer:
@@ -85,7 +89,7 @@ services:
       - EVM_ENGINE_URL=http://ev-reth-sequencer:8551
       - EVM_ETH_URL=http://ev-reth-sequencer:8545
       - EVM_JWT_PATH=/root/jwt/jwt.hex
-      - EVM_BLOCK_TIME=500ms
+      - EVM_BLOCK_TIME=100ms
       - EVM_SIGNER_PASSPHRASE=${EVM_SIGNER_PASSPHRASE}
       - DA_BLOCK_TIME=30s
       - DA_ADDRESS=http://local-da:7980
@@ -95,13 +99,35 @@ services:
 volumes:
   jwttoken-sequencer:
     driver: local
+    driver_opts:
+      type: none
+      device: /data/jwttoken-sequencer
+      o: bind
   ev-reth-sequencer-data:
     driver: local
+    driver_opts:
+      type: none
+      device: /data/ev-reth-sequencer-data
+      o: bind
+  ev-reth-sequencer-logs:
+    driver: local
+    driver_opts:
+      type: none
+      device: /data/ev-reth-sequencer-logs
+      o: bind
   sequencer-data:
     driver: local
+    driver_opts:
+      type: none
+      device: /data/sequencer-data
+      o: bind
   sequencer-export:
     name: sequencer-export
     driver: local
+    driver_opts:
+      type: none
+      device: /data/sequencer-export
+      o: bind
 
 networks:
   evstack_shared:
