@@ -50,7 +50,7 @@ if [ ! -f "$CONFIG_HOME/config/node_key.json" ]; then
 
 	# Add required flags if environment variables are set
 	if [ -n "${EVM_SIGNER_PASSPHRASE:-}" ]; then
-		init_flags="$init_flags --evnode.node.aggregator=true --evnode.signer.passphrase $EVM_SIGNER_PASSPHRASE"
+		init_flags="$init_flags --chain_id=noble-applayer-devnet --evnode.node.aggregator=true --evnode.signer.passphrase $EVM_SIGNER_PASSPHRASE"
 		log "DEBUG" "EVM_SIGNER_PASSPHRASE is set, enabling aggregator mode"
 	fi
 
@@ -61,6 +61,9 @@ if [ ! -f "$CONFIG_HOME/config/node_key.json" ]; then
 else
 	log "INFO" "Node key already exists. Skipping initialization"
 fi
+
+# Modify genesis time
+sed -i 's/"start_time": *"[^"]*"/"start_time": "2025-10-17T09:00:00.000000000Z"/' ${CONFIG_HOME}/config/genesis.json
 
 # Exporting genesis file
 cp -pr "${CONFIG_HOME}/config/genesis.json" "/volumes/sequencer_export/genesis.json"

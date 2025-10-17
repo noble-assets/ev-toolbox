@@ -8,8 +8,8 @@ set -euo pipefail
 # Script metadata
 readonly SCRIPT_VERSION="1.7.0"
 readonly SCRIPT_NAME="deploy-evolve"
-readonly REPO_URL="https://github.com/evstack/ev-toolbox"
-readonly GITHUB_RAW_BASE="https://raw.githubusercontent.com/evstack/ev-toolbox"
+readonly REPO_URL="https://github.com/noble-assets/ev-toolbox"
+readonly GITHUB_RAW_BASE="https://raw.githubusercontent.com/noble-assets/ev-toolbox"
 readonly BASE_URL="$GITHUB_RAW_BASE/refs/heads/main/ev-stacks"
 readonly DEPLOYMENT_DIR="$HOME/evolve-deployment"
 
@@ -973,28 +973,6 @@ setup_sequencer_configuration() {
 		update_env_var "$env_file" "EVM_SIGNER_PASSPHRASE" "$passphrase"
 		log "SUCCESS" "EVM signer passphrase generated and set"
 	fi
-
-	# Check for missing CHAIN_ID and prompt user
-	if grep -q "^CHAIN_ID=$" "$env_file" || ! grep -q "^CHAIN_ID=" "$env_file"; then
-		echo "Chain ID is required for the deployment."
-		echo "Please enter a chain ID (e.g., 1234 for development, or your custom chain ID):"
-		read -r chain_id
-
-		# Validate chain ID is not empty
-		if [[ -z "$chain_id" ]]; then
-			error_exit "Chain ID cannot be empty"
-		fi
-
-		# Update chain ID in .env file
-		update_env_var "$env_file" "CHAIN_ID" "$chain_id"
-		log "SUCCESS" "Chain ID set to: $chain_id"
-
-		# Update genesis.json with the new chain ID
-		update_genesis_chain_id "$chain_id"
-	fi
-
-	# Prompt user for Ethereum addresses for genesis allocation
-	setup_genesis_allocation
 
 	# If DA Celestia is deployed, add DA configuration to single-sequencer
 	if [[ $DEPLOY_DA_CELESTIA == "true" ]]; then

@@ -63,10 +63,22 @@ services:
 volumes:
   celestia-appd-data:
     driver: local
+    driver_opts:
+      type: none
+      device: /data/celestia-appd-data
+      o: bind
   celestia-node-data:
     driver: local
+    driver_opts:
+      type: none
+      device: /data/celestia-node-data
+      o: bind
   celestia-node-export:
     driver: local
+    driver_opts:
+      type: none
+      device: /data/celestia-node-export
+      o: bind
     name: celestia-node-export
 
 networks:
